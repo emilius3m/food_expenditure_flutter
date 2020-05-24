@@ -1,0 +1,48 @@
+{
+    "project_info": {
+        "project_number": "284760353511",
+        "firebase_url": "https://e3m-food-expenditure.firebaseio.com",
+        "project_id": "e3m-food-expenditure",
+        "storage_bucket": "e3m-food-expenditure.appspot.com"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:284760353511:android:16852a6ec73b87b6b69042",
+                "android_client_info": {
+                    "package_name": "e3m.ovh.food_expenditure"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "284760353511-p041io98nevddi91g6803buc8k8ejk9r.apps.googleusercontent.com",
+                    "client_type": 1,
+                    "android_info": {
+                        "package_name": "e3m.ovh.food_expenditure",
+                        "certificate_hash": "32d411faac49a21f86f5f83828580558b48e2cbe"
+                    }
+                },
+                {
+                    "client_id": "284760353511-9qcnvs0s4kqej9bf2ja0n2muqe5fbsb3.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyDVCRCF6Uvav9p0sUA9t00gvhy4T9apRTo"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "284760353511-9qcnvs0s4kqej9bf2ja0n2muqe5fbsb3.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
