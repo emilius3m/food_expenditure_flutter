@@ -16,15 +16,31 @@ import 'package:Spesa/repository/item_repository.dart';
 import 'package:Spesa/blocs/filters/filters.dart';
 
 import 'package:spesa_repository/spesa_repository.dart';
+import 'package:flutter/services.dart';
+import 'package:Spesa/theme.dart';
 
-void main() {
+
+/*
+void main() async {
+    await _init();
+    runZonedGuarded<Future<void>>(
+            () async => runApp(_BIOS()),
+            (Object error, StackTrace stack) => Logger.fatal(error, stack),
+    );
+}*/
+
+
+void main() async {
+    await _init();
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
   final ItemRepository repository = ItemRepository();
 
 
-  runApp(MainApp(userRepository: userRepository));
+  runApp(
+      MainApp(userRepository: userRepository)
+  );
   /*runApp(
     BlocProvider(
       create: (context) => AuthenticationBloc(
@@ -35,6 +51,20 @@ void main() {
   );*/
 }
 
+
+
+Future<void> _init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    //await InAppPurchases.initialize();
+    //await Database.initialize();
+    //Logger.initialize();
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarDividerColor: Colors.black,
+        statusBarColor: Colors.transparent,
+    ));
+}
 
 class MainApp extends StatelessWidget {
 
@@ -49,8 +79,6 @@ class MainApp extends StatelessWidget {
             super(key: key);
 
 
-
-
     @override
     Widget build(BuildContext context) {
         return MultiBlocProvider(
@@ -60,26 +88,40 @@ class MainApp extends StatelessWidget {
                     create: (context) {
                         return AuthenticationBloc(
                             userRepository: _userRepository,
-                        )..add(AppStarted());
+                        )
+                            ..add(AppStarted());
                     },
                 ),
                 BlocProvider<ListBloc>(
                     create: (context) {
                         return ListBloc(
                             itemRepository: FirebaseSpesaRepository(uid),
-                        )..add(LoadaList());
+                        )
+                            ..add(LoadaList());
                     },
                 ),
                 BlocProvider<FiltersBloc>(
-                    create: (context) => FiltersBloc(
-                        listBloc: BlocProvider.of<ListBloc>(context),
-                    ),
+                    create: (context) =>
+                        FiltersBloc(
+                            listBloc: BlocProvider.of<ListBloc>(context),
+                        ),
                 ),
-
             ],
-            child: MaterialApp(
+            child: BlocProvider(
+                create: (context) => ThemeBloc(),
+                child: BlocBuilder<ThemeBloc, ThemeState>(
+                    builder: _buildWithTheme,
+                ),
+            ),
+        );
+    }
+            Widget _buildWithTheme(BuildContext context, ThemeState state) {
+            return
+            MaterialApp(
                 debugShowCheckedModeBanner: false,
-
+                theme: state.themeData,
+                //darkTheme: Themes.getDarkTheme(),
+                //theme: Themes.getDarkTheme(),
                 title: 'Spesa ',
                 routes: {
                     '/splash': (_) => SplashScreenPage(),
@@ -131,7 +173,7 @@ class MainApp extends StatelessWidget {
                     },
                 },
                 initialRoute: '/splash',
-            ),
+
         );
     }
 }

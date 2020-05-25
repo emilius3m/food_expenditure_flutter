@@ -13,6 +13,7 @@ import 'package:Spesa/widgets/filters.dart';
 import 'package:spesa_repository/spesa_repository.dart';
 import 'package:Spesa/blocs/filters/filters.dart';
 import 'package:flutter/services.dart';
+import 'package:Spesa/screens/settings_page.dart';
 
 class HomeScreen extends StatelessWidget {
   final String name;
@@ -34,25 +35,25 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      //print (name);
-      //print (fbaseuid);
+
+      IconThemeData iconThemeData = IconTheme.of(context);
       return BlocBuilder<TabBloc, AppTab>(
           builder: (context, activeTab) {
               return Scaffold(
                   ///////drawer: SpesaDrawer(),
                   appBar: AppBar(
-
-                      backgroundColor: Colors.white,
+                      //backgroundColor: Colors.white,
                       title: Text('Hi $name!',
-                          style: TextStyle(color:Color(0xFF18D191))
+                          style:  Theme.of(context).textTheme.bodyText1,
+                          //style: TextStyle()
                            ),
                       actions: <Widget>[
                           BlocBuilder<FiltersBloc, FiltersState>(
                               builder: (context, state) =>
                                   IconButton(
                                       icon: state.isEnabled
-                                          ? const Icon(Icons.filter_list, color: Colors.red)
-                                          : const Icon(Icons.filter_list, color: Colors.green),
+                                          ?  Icon(Icons.filter_list, color: iconThemeData.color)
+                                          :  Icon(Icons.filter_list, color: iconThemeData.color),
                                       tooltip: 'Filtrare',
                                       onPressed: () {
                                           return showGeneralDialog(
@@ -77,21 +78,39 @@ class HomeScreen extends StatelessWidget {
                                       },
                                   )
                           ),
+
                             BlocBuilder<FiltersBloc, FiltersState>(
+
                             builder: (context, state) =>
                                 IconButton(
 
-                                    icon: Icon(Icons.view_list,color: Color(0xFF18D191)),
+                                    icon: Icon(Icons.view_list,
+                                        color: iconThemeData.color
 
 
+                                    ),
                                     onPressed: () {
                                         BlocProvider.of<FiltersBloc>(context).add(UpdateListGrid(!(state as FilteredItemsLoaded).activeFilter));
                                     }
                                     )
                             ),
+                          InkWell(
+                              child: Icon(
+                                  Icons.settings,
+                                  color: iconThemeData.color
+                              ),
+                              onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) => SettingsPage(
+                                              "prova",
+                                          )),
+                                  );
+                              },
+                          ),
                           //ExtraActions(),
                           IconButton(
-                              icon: Icon(Icons.info,color: Color(0xFF18D191)),
+                              icon: Icon(Icons.info,color: iconThemeData.color),
                               onPressed: () {
                                  _redirectToPage(context, AboutPage());
                               }),
@@ -100,7 +119,7 @@ class HomeScreen extends StatelessWidget {
                           IconButton(
                               icon: Icon(
                                   Icons.close,
-                                  color: Color(0xFF18D191),
+                                  color: iconThemeData.color,
                               ),
                               onPressed: () {
                                   BlocProvider.of<AuthenticationBloc>(context).add(
@@ -109,16 +128,13 @@ class HomeScreen extends StatelessWidget {
                           ),
                           IconButton(
                               tooltip: "Back",
-                              icon: Icon(Icons.backspace,color: Color(0xFF18D191)),
+                              icon: Icon(Icons.backspace,color: iconThemeData.color),
                               onPressed: () {
                                   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                                   //Navigator.of(context).pushReplacementNamed('/');
                               })
 
                       ],
-
-
-
                   ),
                   body: activeTab == AppTab.spesa ? FilteredItems() : AddEditScreen(
                       onSave: (product, note,quantity,fileName,selectedType) {

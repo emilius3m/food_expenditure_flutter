@@ -26,7 +26,7 @@ class _ImageViewState extends State<ImageView> {
 
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Color(0xFF18D191),
+        //color: Color(0xFF18D191),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -49,7 +49,7 @@ class _ImageViewState extends State<ImageView> {
             IconButton(
                 icon: Icon(
                   Icons.backspace,
-                  color: Colors.white,
+                  //color: Colors.white,
                 ),
                 onPressed: () async {
                   //await screenBloc.delete(widget.imageFile.path);

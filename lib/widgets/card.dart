@@ -15,16 +15,10 @@ class SpesaCard extends StatelessWidget {
 
  SpesaCard(
     {
-
         Key key,
         @required this.item,
         @required this.onTap,
         @required this.onLongPress,
-
-        //@required this.imgUrl,
-        //@required this.title,
-        //@required this.subtitle,
-        //@required this.estimatedTime
     }
     ):
         super(key: key);
@@ -49,7 +43,7 @@ Widget build(BuildContext context) {
             borderType: BorderType.RRect,
             radius: Radius.circular(12),
             padding: EdgeInsets.all(6),
-            color: Colors.green,
+            color: Theme.of(context).accentColor,
             strokeWidth: 1,
             dashPattern: [6, 4, 6, 4],
             child:
@@ -57,59 +51,24 @@ Widget build(BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.end,
-            //mainAxisAlignment: MainAxisAlignment.center,
-            //crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget> [
-                //SizedBox(height: 10.0),
-                /*
-                    Badge(
-                    position: BadgePosition.topRight(top: 0, right: -3),
-                    animationDuration: Duration(milliseconds: 300),
-                    animationType: BadgeAnimationType.slide,
-                    badgeContent: Text(
-                        estimatedTime.toString(),
-                    style: TextStyle(color: Colors.white),
-                    ),
-                    child: IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {}),
-                    ),*/
-
-
-                /*Expanded(
-                    child:
-                    DottedBorder(
-
-                        //borderType: BorderType.RRect,
-                        //radius: Radius.circular(12),
-                        //padding: EdgeInsets.all(6),
-                        //padding: EdgeInsets.all(2.5),
-                        //dashPattern: [8, 4],
-                        //strokeWidth: 2,
-                        //strokeCap: StrokeCap.round,
-                        child:Text(
-                            item.product,
-                            style: TextStyle(color:Colors.green, fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-
-                    ),
-                ),*/
+                children: <Widget> [
                 Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget> [
                         Text(
                             (item.imageurl != "")  ? item.product: "",
-                            style: TextStyle(color:Color(0xFF18D191), fontSize: 14, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.bodyText2,
                         ),
                         Badge(
                             shape: BadgeShape.square,
-                            badgeColor: Color(0xFF18D191),
+                            badgeColor: Theme.of(context).highlightColor,
                             borderRadius: 5,
                             position: BadgePosition.topRight(top:0, right: 0),
                             padding: EdgeInsets.all(4),
                             badgeContent: Text(
                                 item.quantity.toString(),
+                                style:  Theme.of(context).textTheme.bodyText2
 
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             child:
                             Container(
@@ -120,16 +79,12 @@ Widget build(BuildContext context) {
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
                                 child: (item.imageurl == "")  ?
-                                    Text( item.product, style: TextStyle(color:Color(0xFF18D191), fontSize: 16, fontWeight: FontWeight.bold))
-                                 :
-                                Image.network(item.imageurl , fit: BoxFit.cover)
-
+                                    Text( item.product, style: Theme.of(context).textTheme.bodyText1)
+                                 :  Image.network(item.imageurl , fit: BoxFit.cover)
                             )
                         ),
                         ),
-
                     ]
-
                 ),
                 Row(
                     //mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -140,36 +95,26 @@ Widget build(BuildContext context) {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget> [
-
-
                                 FloatingActionButton(
-                                    backgroundColor: Color(0xFF18D191),
+                                    backgroundColor: Theme.of(context).highlightColor,
                                     onPressed: onTap,
-                                    elevation: 2,
+                                    elevation: 4,
                                     heroTag: null,
                                     mini: false,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                                    child: Icon(Icons.edit_attributes, color: Colors.white),
+                                    child: Icon(
+                                        Icons.edit_attributes, color:IconTheme.of(context).color ),
                                 )
                             ]
                         ),
-                        /*Text(
-                            (item.imageurl != "")  ? item.product: "",
-                            style: TextStyle(color:Colors.green, fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                        */Column (
-
+                        Column (
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget> [
-
-                                       //padding: EdgeInsets.all(12.5),
-                                Text(" "+ item.note, maxLines: 1,style: TextStyle(color:Colors.greenAccent)),
-                                Text(" "+ item.type, maxLines: 1,style: TextStyle(color:Colors.teal)),
-
-
-
+                                //padding: EdgeInsets.all(12.5),
+                                Text(" "+ item.note, maxLines: 1,style: Theme.of(context).textTheme.headline2),
+                                Text(" "+ item.type, maxLines: 1,style: Theme.of(context).textTheme.headline2),
                             ]
                         )
                         //Text(item.note, maxLines: 2,style: TextStyle(color:Colors.greenAccent))
