@@ -18,7 +18,7 @@ import 'package:Spesa/blocs/filters/filters.dart';
 import 'package:spesa_repository/spesa_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:Spesa/theme.dart';
-
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 /*
 void main() async {
@@ -34,6 +34,7 @@ void main() async {
     await _init();
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
+  BlocSupervisor.delegate = await HydratedBlocDelegate.build();
   final UserRepository userRepository = UserRepository();
   final ItemRepository repository = ItemRepository();
 

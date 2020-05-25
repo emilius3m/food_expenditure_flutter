@@ -16,7 +16,7 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: Text('Register',style: TextStyle(color:Color(0xFF18D191))),
-          backgroundColor: Colors.white,
+          //backgroundColor: Colors.white,
       ),
 
       body: Center(

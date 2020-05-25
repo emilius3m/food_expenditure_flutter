@@ -6,11 +6,13 @@ abstract class ThemeEvent extends Equatable {
 
 class ThemeChanged extends ThemeEvent {
   final AppTheme theme;
+  final String themeName;
 
-  ThemeChanged({@required this.theme});
+
+  ThemeChanged({@required this.theme,@required this.themeName});
 
   @override
   // TODO: implement props
-  List<Object> get props => [theme];
+  List<Object> get props => [theme,themeName];
 
 }

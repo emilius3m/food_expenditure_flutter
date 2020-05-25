@@ -27,7 +27,7 @@ class ListItem extends StatelessWidget {
             elevation: 8.0,
             margin: new EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             child: Container(
-                decoration: BoxDecoration(color: Color(0xFF18D191)),
+                decoration: BoxDecoration(color: Theme.of(context).cardColor),
                 child: ListTile(
                     //  dense:true,
                     isThreeLine: true,
@@ -40,7 +40,7 @@ class ListItem extends StatelessWidget {
               ),
               child:Column(
                   children: <Widget>[
-                      Icon(Icons.shopping_cart, color: Colors.white),
+                      Icon(Icons.shopping_cart, color:IconTheme.of(context).color),
                       Text(item.quantity, style: TextStyle(color: Colors.white,fontSize: 20))
                   ],
               )
@@ -55,14 +55,14 @@ class ListItem extends StatelessWidget {
                   ),
               ),
           ),
-          subtitle: item.type.isNotEmpty
-              ?  Row(
+          subtitle:
+                Row(
               children: <Widget>[
-                  Icon(Icons.note, color: Colors.yellowAccent),
+                  Icon(Icons.note, color: Colors.white),
                   Text(item.type +"\n "+ item.note, style: TextStyle(color: Colors.white)),
               //Text(item.type, style: TextStyle(color: Colors.white))
               ],
-          ) : Row(),
+          ),
           trailing:
                   item.imageurl.isNotEmpty
               ? Image.network(item.imageurl , fit: BoxFit.cover ,width:100 )

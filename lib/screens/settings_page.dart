@@ -27,7 +27,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       onTap: () {
                           BlocProvider.of<ThemeBloc>(context)
-                              .add(ThemeChanged(theme: AppTheme.values[0]));
+                              .add(ThemeChanged(theme: AppTheme.Light,themeName:"Light"));
                       }
                   ),
               ),
@@ -40,7 +40,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       onTap: () {
                           BlocProvider.of<ThemeBloc>(context)
-                              .add(ThemeChanged(theme: AppTheme.Midnight));
+                              .add(ThemeChanged(theme: AppTheme.Midnight,themeName:"Midnight"));
                       }
                   ),
               ),
@@ -53,7 +53,7 @@ class SettingsPage extends StatelessWidget {
                         ),
                         onTap: () {
                             BlocProvider.of<ThemeBloc>(context)
-                            .add(ThemeChanged(theme: AppTheme.PureBlack));
+                            .add(ThemeChanged(theme: AppTheme.PureBlack,themeName:"PureBlack"));
                         }
                         ),
               )

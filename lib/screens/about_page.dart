@@ -19,7 +19,7 @@ class AboutPage extends StatelessWidget {
      Scaffold(
         appBar: AppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Colors.white,
+            //backgroundColor: Colors.white,
 
           title: const Text(Strings.titleAboutPage,style: TextStyle(color:Color(0xFF18D191))),
             actions: <Widget>[
