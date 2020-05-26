@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^0.5.6+3
   intro_views_flutter: ^2.8.1
   hydrated_bloc: ^4.1.0
+  wc_flutter_share: ^0.2.1
 
   ###firebase_core: ^0.4.3+3
   #spesa_repository:
