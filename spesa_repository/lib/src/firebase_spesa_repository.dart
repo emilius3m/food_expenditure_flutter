@@ -17,7 +17,7 @@ class FirebaseSpesaRepository implements SpesaRepository {
 
 
   @override
-  Future<void> addNewItem(Item item) {
+  Future<void> addNewItem(Item item) async {
       /*spesaCollection.add({
           "name": "john",
           "age": 50,
@@ -31,15 +31,9 @@ class FirebaseSpesaRepository implements SpesaRepository {
               .add({"petName": "blacky", "petType": "dog", "petAge": 1});
       });
         */
-
-
       return spesaCollection.document(_uid).collection('mylist').add(item.toEntity().toDocument()).then((_){
           print("success!");
       });
-
-
-    //return spesaCollection.add(item.toEntity().toDocument());
-
   }
 
   @override
@@ -47,20 +41,11 @@ class FirebaseSpesaRepository implements SpesaRepository {
       return spesaCollection.document(_uid)
           .collection('mylist')
           .document(item.id).delete();
-    //return spesaCollection.document(item.uid).collection('mylist').document(item.id).delete().then((_){
-    //    print("success!");
-    //});
+
   }
 
   @override
-  Stream<List<Item>> spesa() {
-
-      /*spesaCollection.getDocuments().then((querySnapshot) {
-          querySnapshot.documents.forEach((result) {
-              print(result.data);
-          });
-      });*/
-
+  Stream<List<Item>> spesa()  {
 
     return spesaCollection.document(_uid).collection('mylist').snapshots().map((snapshot) {
       return snapshot.documents
@@ -71,13 +56,10 @@ class FirebaseSpesaRepository implements SpesaRepository {
 
   @override
   Future<void> updateItem(Item update) {
-
-
-
-
     return spesaCollection.document(_uid)
         .collection('mylist')
         .document(update.id)
+
         .updateData(update.toEntity().toDocument());
   }
 }

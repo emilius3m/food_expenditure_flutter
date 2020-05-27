@@ -28,21 +28,12 @@ class ListBloc extends Bloc<ListEvent, ListState> {
       yield* _mapUpdateItemToState(event);
     } else if (event is DeleteItem) {
       yield* _mapDeleteItemToState(event);
-    } else if (event is ToggleAll) {
-      yield* _mapToggleAllToState();
-    } else if (event is ClearCompleted) {
-      yield* _mapClearCompletedToState();
     } else if (event is ListUpdated) {
       yield* _mapListUpdateToState(event);
     }
   }
 
-  /*Stream<ListState> _mapLoadListToState() async* {
-    _todosSubscription?.cancel();
-    _todosSubscription = _itemRepositorytodos().listen(
-          (lista) => add(TodosUpdated(lista)),
-        );
-  }*/
+
 
 
   Stream<ListState> _mapLoadListToState() async* {
@@ -72,35 +63,6 @@ class ListBloc extends Bloc<ListEvent, ListState> {
 
   Stream<ListState> _mapDeleteItemToState(DeleteItem event) async* {
     _spesaRepository.deleteItem(event.item);
-  }
-
-  Stream<ListState> _mapToggleAllToState() async* {
-    final currentState = state;
-    if (currentState is ListLoaded) {
-      final allComplete = currentState.lista.every((item) => item.complete);
-      final List<Item> updatedList = currentState.lista
-          .map((item) => item.copyWith(complete: !allComplete))
-          .toList();
-      updatedList.forEach((updatedItem) {
-
-          //      _todosRepository.updateTodo(updatedItem);
-
-      });
-    }
-  }
-
-  Stream<ListState> _mapClearCompletedToState() async* {
-    final currentState = state;
-    if (currentState is ListLoaded) {
-      final List<Item> completedList =
-          currentState.lista.where((item) => item.complete).toList();
-      completedList.forEach((completedItem) {
-
-        ////_todosRepository.deleteTodo(completedItem);
-
-
-      });
-    }
   }
 
   Stream<ListState> _mapListUpdateToState(ListUpdated event) async* {

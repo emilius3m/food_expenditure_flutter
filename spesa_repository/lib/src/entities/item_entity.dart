@@ -30,7 +30,7 @@ class ItemEntity extends Equatable {
   }
 
   @override
-  List<Object> get props => [complete, id, note, product];
+  List<Object> get props => [complete, id, note, product,quantity,type];
 
   @override
   String toString() {

@@ -48,10 +48,6 @@ class DeleteItem extends ListEvent {
   String toString() => 'DeleteItem_event { item: $item }';
 }
 
-class ClearCompleted extends ListEvent {}
-
-class ToggleAll extends ListEvent {}
-
 class ListUpdated extends ListEvent {
   final List<Item> lista;
 
