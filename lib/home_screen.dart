@@ -15,28 +15,80 @@ import 'package:Spesa/blocs/filters/filters.dart';
 import 'package:flutter/services.dart';
 import 'package:Spesa/screens/settings_page.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:ui';
+import 'dart:math';
+import 'package:speech_to_text/speech_to_text.dart';
 
-const kCanvasSize = 200.0;
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 
-class HomeScreen extends StatelessWidget {
-  final String name;
-  final String fbaseuid;
+class HomeScreen extends StatefulWidget {
+    final String username;
+    final String fbaseuid;
+
+
+    const HomeScreen ({ Key key, this.username,this.fbaseuid }): super(key: key);
+    @override
+    _HomeScreenState createState() => _HomeScreenState();
+
+
+}
+
+
+class _HomeScreenState extends State<HomeScreen> {
   ByteData imgBytes;
 
+  bool _hasSpeech = false;
+  double level = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000;
+  String lastWords = "";
+  String lastError = "";
+  String lastStatus = "";
+  String _currentLocaleId = "";
+  List<LocaleName> _localeNames = [];
+  final SpeechToText speech = SpeechToText();
 
-  HomeScreen({Key key, @required this.name,@required this.fbaseuid}) : super(key: key);
-
-  void generateImage() async {
-
-
-
+  @override
+  void initState() {
+      super.initState();
+      initSpeechState();
   }
 
-   _redirectToPage(BuildContext context, Widget page){
+  void errorListener(SpeechRecognitionError error) {
+      setState(() {
+          lastError = "${error.errorMsg} - ${error.permanent}";
+      });
+  }
+
+  void statusListener(String status) {
+      setState(() {
+          lastStatus = "$status";
+      });
+  }
+
+
+  Future<void> initSpeechState() async {
+      bool hasSpeech = await speech.initialize(
+          onError: errorListener, onStatus: statusListener);
+      if (hasSpeech) {
+          _localeNames = await speech.locales();
+
+          var systemLocale = await speech.systemLocale();
+          _currentLocaleId = systemLocale.localeId;
+      }
+
+      if (!mounted) return;
+
+      setState(() {
+          _hasSpeech = hasSpeech;
+      });
+  }
+
+
+  _redirectToPage(BuildContext context, Widget page){
       WidgetsBinding.instance.addPostFrameCallback((_){
           MaterialPageRoute newRoute = MaterialPageRoute(
               builder: (BuildContext context) => page
@@ -147,10 +199,11 @@ class HomeScreen extends StatelessWidget {
       return BlocBuilder<TabBloc, AppTab>(
           builder: (context, activeTab) {
               return Scaffold(
+
                   ///////drawer: SpesaDrawer(),
                   appBar: AppBar(
                       //backgroundColor: Colors.white,
-                      title: Text('Hi $name!',
+                      title: Text('Hi ' + widget.username +'!',
                           style:  Theme.of(context).textTheme.bodyText1,
                           //style: TextStyle()
                            ),
@@ -270,7 +323,11 @@ class HomeScreen extends StatelessWidget {
 
                       ],
                   ),
-                  body: activeTab == AppTab.spesa ? FilteredItems() : AddEditScreen(
+                  body:
+                  //Row(children: <Widget>[
+                  //Text('You have $lastWords'),
+
+                  activeTab == AppTab.spesa ? FilteredItems() : AddEditScreen(
                       onSave: (product, note,quantity,fileName,selectedType) {
                           ///print ("$product $note $fileName $selectedType");
                           BlocProvider.of<ListBloc>(context).add(
@@ -281,7 +338,16 @@ class HomeScreen extends StatelessWidget {
                       },
                       isEditing: false,
                   ),
-
+                  //]),
+                  floatingActionButton: activeTab == AppTab.addelement ? Container() :
+              FloatingActionButton(
+                      backgroundColor: Color(0xFF18D191),
+                      mini: false,
+                      elevation: 9,
+                      onPressed:  speech.isListening ? null : startListening,
+                      child: Icon(Icons.keyboard_voice),
+                      tooltip: 'Add product',
+                  ),
 
                   bottomNavigationBar: TabSelector(
                       activeTab: activeTab,
@@ -292,10 +358,69 @@ class HomeScreen extends StatelessWidget {
           },
       );
   }
+
+  void startListening() {
+
+      lastWords = "";
+      lastError = "";
+      speech.listen(
+          onResult: resultListener,
+          listenFor: Duration(seconds: 10),
+          localeId: _currentLocaleId,
+          onSoundLevelChange: soundLevelListener,
+          cancelOnError: true,
+          partialResults: true);
+      setState(() {});
+  }
+
+  void resultListener(SpeechRecognitionResult result) {
+
+      if (result.finalResult)
+      BlocProvider.of<ListBloc>(context).add(
+          AddItem(Item( result.recognizedWords, note: "",quantity:"1",type:"" )));
+
+      setState(() {
+          lastWords = "${result.recognizedWords} - ${result.finalResult}";
+          print (lastWords);
+      });
+  }
+
+  void soundLevelListener(double level) {
+      minSoundLevel = min(minSoundLevel, level);
+      maxSoundLevel = max(maxSoundLevel, level);
+      print("sound level $level: $minSoundLevel - $maxSoundLevel ");
+      setState(() {
+          this.level = level;
+      });
+  }
 }
 
 
 
+/*
 
 
+floatingActionButton: activeTab == AppTab.addelement ? Container() : Row (
+children: <Widget>[
+FloatingActionButton(
+backgroundColor: Color(0xFF18D191),
 
+mini: false,
+elevation: 9,
+heroTag: null,
+onPressed: _hasSpeech ? null : initSpeechState,
+child: Icon(Icons.add_a_photo),
+),
+SizedBox(
+width: 10,
+),
+FloatingActionButton(
+backgroundColor: Color(0xFF18D191),
+mini: false,
+elevation: 9,
+onPressed:  speech.isListening ? null : startListening,
+child: Icon(Icons.keyboard_voice),
+tooltip: 'Add product',
+),
+]),
+*/

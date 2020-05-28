@@ -1,4 +1,4 @@
-class Connection{
+/*class Connection{
 
   var url = '';
 
@@ -9,3 +9,4 @@ class Connection{
   }
 }
 Connection con = Connection();
+*/

@@ -11,23 +11,12 @@ import 'package:Spesa/login/login.dart';
 import 'package:Spesa/simple_bloc_delegate.dart';
 import 'package:Spesa/screens/add_edit_screen.dart';
 import 'package:Spesa/screens/splash_page.dart';
-import 'package:Spesa/repository/item_repository.dart';
-
 import 'package:Spesa/blocs/filters/filters.dart';
-
 import 'package:spesa_repository/spesa_repository.dart';
 import 'package:flutter/services.dart';
-import 'package:Spesa/theme.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-/*
-void main() async {
-    await _init();
-    runZonedGuarded<Future<void>>(
-            () async => runApp(_BIOS()),
-            (Object error, StackTrace stack) => Logger.fatal(error, stack),
-    );
-}*/
+
 
 
 void main() async {
@@ -36,20 +25,13 @@ void main() async {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   BlocSupervisor.delegate = await HydratedBlocDelegate.build();
   final UserRepository userRepository = UserRepository();
-  final ItemRepository repository = ItemRepository();
+  //final ItemRepository repository = ItemRepository();
 
 
   runApp(
       MainApp(userRepository: userRepository)
   );
-  /*runApp(
-    BlocProvider(
-      create: (context) => AuthenticationBloc(
-        userRepository: userRepository,
-      )..add(AppStarted()),
-      child: App(userRepository: userRepository),
-    ),
-  );*/
+
 }
 
 
@@ -122,7 +104,6 @@ class MainApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 theme: state.themeData,
                 //darkTheme: Themes.getDarkTheme(),
-                //theme: Themes.getDarkTheme(),
                 title: 'Spesa ',
                 routes: {
                     '/splash': (_) => SplashScreenPage(),
@@ -137,24 +118,12 @@ class MainApp extends StatelessWidget {
                                             BlocProvider<TabBloc>(
                                                 create: (context) => TabBloc(),
                                             ),
-
-
-                                            /*BlocProvider<StatsBloc>(
-                                                create: (context) => StatsBloc(
-                                                    todosBloc: BlocProvider.of<TodosBloc>(context),
-                                                ),
-                                            ),
-
-                                             */
                                         ],
-                                        child: HomeScreen(name: state.displayName,fbaseuid:state.uid),
+                                        child: HomeScreen(username: state.displayName, fbaseuid:state.uid),
                                     );
                                 }
                                 if (state is Unauthenticated) {
                                     return LoginScreen(userRepository: _userRepository);
-                                    /*return Center(
-                                        child: Text('Could not authenticate with Firestore'),
-                                    );*/
                                 }
                                 return Center(child: CircularProgressIndicator());
                             },
@@ -170,7 +139,6 @@ class MainApp extends StatelessWidget {
                             },
                             isEditing: false,
                         );
-                        //return null;
                     },
                 },
                 initialRoute: '/splash',
@@ -180,30 +148,3 @@ class MainApp extends StatelessWidget {
 }
 
 
-/*
-class App extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  App({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-          if (state is Unauthenticated) {
-            return LoginScreen(userRepository: _userRepository);
-          }
-          if (state is Authenticated) {
-            return HomeScreen(name: state.displayName);
-          }
-          return SplashScreen();
-        },
-      ),
-    );
-  }
-}
-*/

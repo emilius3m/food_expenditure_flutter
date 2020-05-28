@@ -1,7 +1,7 @@
 name: Spesa
 description: Spesa lista.
 
-version: 1.4.8+8
+version: 1.5.9+9
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -43,6 +43,8 @@ dependencies:
   intro_views_flutter: ^2.8.1
   hydrated_bloc: ^4.1.0
   wc_flutter_share: ^0.2.1
+  speech_to_text: ^2.2.0
+
 
   ###firebase_core: ^0.4.3+3
   #spesa_repository:
@@ -66,7 +68,9 @@ flutter:
     - assets/images/Screenshot_3.png
     - assets/images/Screenshot_4.png
     - assets/fonts/
-
+    - assets/sounds/speech_to_text_listening.m4r
+    - assets/sounds/speech_to_text_cancel.m4r
+    - assets/sounds/speech_to_text_stop.m4r
 
 
 module:
