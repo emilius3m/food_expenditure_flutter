@@ -20,41 +20,51 @@ import 'dart:ui' as ui;
 import 'dart:ui';
 import 'dart:math';
 import 'package:speech_to_text/speech_to_text.dart';
-
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
+
+
+List<Language> languages = [
+    const Language('System', 'default'),
+    const Language('English', 'en_US'),
+    const Language('Italiano', 'it_IT'),
+];
+
+class Language {
+    final String name;
+    final String code;
+
+    const Language(this.name, this.code);
+}
 
 class HomeScreen extends StatefulWidget {
     final String username;
     final String fbaseuid;
 
-
     const HomeScreen ({ Key key, this.username,this.fbaseuid }): super(key: key);
     @override
     _HomeScreenState createState() => _HomeScreenState();
-
-
 }
-
 
 class _HomeScreenState extends State<HomeScreen> {
   ByteData imgBytes;
 
-  bool _hasSpeech = false;
   double level = 0.0;
   double minSoundLevel = 50000;
   double maxSoundLevel = -50000;
   String lastWords = "";
   String lastError = "";
   String lastStatus = "";
-  String _currentLocaleId = "";
-  List<LocaleName> _localeNames = [];
-  final SpeechToText speech = SpeechToText();
+
+  SpeechToText _speech;
+  bool _speechRecognitionAvailable = false;
+  Language selectedLang = languages.first;
+
 
   @override
   void initState() {
       super.initState();
-      initSpeechState();
+      activateSpeechRecognizer();
   }
 
   void errorListener(SpeechRecognitionError error) {
@@ -69,21 +79,23 @@ class _HomeScreenState extends State<HomeScreen> {
       });
   }
 
+  Future<void> activateSpeechRecognizer() async {
+      print('_MyAppState.activateSpeechRecognizer... ');
+      _speech = SpeechToText();
 
-  Future<void> initSpeechState() async {
-      bool hasSpeech = await speech.initialize(
-          onError: errorListener, onStatus: statusListener);
-      if (hasSpeech) {
-          _localeNames = await speech.locales();
-
-          var systemLocale = await speech.systemLocale();
-          _currentLocaleId = systemLocale.localeId;
+      _speechRecognitionAvailable = await _speech.initialize(
+          onError: errorListener, onStatus: statusListener
+      );
+      var currentLocale = await _speech.systemLocale();
+      if (null != currentLocale) {
+          selectedLang =
+              languages.firstWhere((lang) => lang.code == currentLocale.localeId);
       }
 
       if (!mounted) return;
 
       setState(() {
-          _hasSpeech = hasSpeech;
+          _speechRecognitionAvailable = _speechRecognitionAvailable;
       });
   }
 
@@ -339,12 +351,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       isEditing: false,
                   ),
                   //]),
-                  floatingActionButton: activeTab == AppTab.addelement ? Container() :
+                  floatingActionButton: ((activeTab == AppTab.addelement) && _speechRecognitionAvailable) ? Container() :
               FloatingActionButton(
                       backgroundColor: Color(0xFF18D191),
                       mini: false,
                       elevation: 9,
-                      onPressed:  speech.isListening ? null : startListening,
+                      onPressed:  _speech.isListening ? null : startListening,
                       child: Icon(Icons.keyboard_voice),
                       tooltip: 'Add product',
                   ),
@@ -363,10 +375,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       lastWords = "";
       lastError = "";
-      speech.listen(
+      _speech.listen(
           onResult: resultListener,
-          listenFor: Duration(seconds: 10),
-          localeId: _currentLocaleId,
+          listenFor: Duration(seconds: 5),
+          localeId:  selectedLang.code,
           onSoundLevelChange: soundLevelListener,
           cancelOnError: true,
           partialResults: true);
@@ -377,18 +389,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (result.finalResult)
       BlocProvider.of<ListBloc>(context).add(
-          AddItem(Item( result.recognizedWords, note: "",quantity:"1",type:"" )));
+          AddItem(Item( result.recognizedWords, note: "",quantity:"0",type:"" )));
 
       setState(() {
           lastWords = "${result.recognizedWords} - ${result.finalResult}";
-          print (lastWords);
+          //print (lastWords);
       });
   }
 
   void soundLevelListener(double level) {
       minSoundLevel = min(minSoundLevel, level);
       maxSoundLevel = max(maxSoundLevel, level);
-      print("sound level $level: $minSoundLevel - $maxSoundLevel ");
+      //print("sound level $level: $minSoundLevel - $maxSoundLevel ");
       setState(() {
           this.level = level;
       });

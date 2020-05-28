@@ -31,7 +31,10 @@ class FirebaseSpesaRepository implements SpesaRepository {
               .add({"petName": "blacky", "petType": "dog", "petAge": 1});
       });
         */
-      return spesaCollection.document(_uid).collection('mylist').add(item.toEntity().toDocument());
+      Firestore.instance.runTransaction((Transaction transaction) async {
+          spesaCollection.document(_uid).collection('mylist').add(
+              item.toEntity().toDocument());
+          });
          // .then((_){
          // print("success!");
       //});
@@ -42,12 +45,10 @@ class FirebaseSpesaRepository implements SpesaRepository {
       return spesaCollection.document(_uid)
           .collection('mylist')
           .document(item.id).delete();
-
   }
 
   @override
   Stream<List<Item>> spesa()  {
-
     return spesaCollection.document(_uid).collection('mylist').snapshots().map((snapshot) {
           return snapshot.documents.map((doc) =>
               Item.fromEntity(ItemEntity.fromSnapshot(doc))
@@ -60,7 +61,6 @@ class FirebaseSpesaRepository implements SpesaRepository {
     return spesaCollection.document(_uid)
         .collection('mylist')
         .document(update.id)
-
         .updateData(update.toEntity().toDocument());
   }
 }
