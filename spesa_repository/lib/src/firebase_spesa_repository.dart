@@ -48,7 +48,7 @@ class FirebaseSpesaRepository implements SpesaRepository {
 
   @override
   Stream<List<Item>> spesa()  {
-    return spesaCollection.document(_uid).collection('mylist').snapshots().map((snapshot) {
+    return spesaCollection.document(_uid).collection('mylist').orderBy('product', descending: false).snapshots().map((snapshot) {
           return snapshot.documents.map((doc) =>
               Item.fromEntity(ItemEntity.fromSnapshot(doc))
           ).toList();
