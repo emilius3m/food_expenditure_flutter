@@ -123,8 +123,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _shareImageAndText(String share, List<Item> filteredItems) async {
+      Size size;
 
-      Size size= Size(720, 1080);
+      if ((40 * filteredItems.length) > 1080)
+       size= Size( 720, ( (40 * filteredItems.length ).toDouble() + 80) );
+            else size=Size( 720,1080);
+
       //final color = Colors.primaries[widget.rd.nextInt(widget.numColors)];
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder,

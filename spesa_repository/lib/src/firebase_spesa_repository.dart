@@ -3,7 +3,6 @@
 // in the LICENSE file.
 
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spesa_repository/spesa_repository.dart';
 import 'entities/entities.dart';
