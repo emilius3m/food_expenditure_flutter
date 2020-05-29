@@ -13,7 +13,7 @@ class DeleteItemSnackBar extends SnackBar {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          duration: Duration(seconds: 3),
+          duration: Duration(seconds: 2),
           action: SnackBarAction(
             label: 'Undo',
             onPressed: onUndo,

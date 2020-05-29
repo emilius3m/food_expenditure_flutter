@@ -13,19 +13,18 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:random_string/random_string.dart';
-import 'dart:math' show Random;
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:Spesa/controllers/image_handler.dart';
 import 'package:Spesa/screens/textview.dart';
 import 'package:exif/exif.dart';
-import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 
-
+import 'package:Spesa/blocs/blocs.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:Spesa/models/models.dart';
 typedef OnSaveCallback = Function(String product, String note, String quantity, String fileName, String selectedType);
 
 class AddEditScreen extends StatefulWidget {
@@ -470,24 +469,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 ),
                 Column(
                     children: <Widget>[
-                        /*isEditing ? Row() :
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                                loaded == null
-                                    ? Text('not loaded')
-                                    : Text('loaded '),
-                                RaisedButton(
-                                    onPressed: _choose,
-                                    child: Text('Choose Image'),
-                                ),
-                                SizedBox(width: 10.0),
-                                RaisedButton(
-                                    onPressed: _upload,
-                                    child: Text('Upload Image'),
-                                )
-                            ],
-                        ),*/
+
                         provider == null
                             ? Text('\n')
                             : Container(
@@ -528,13 +510,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
             children: <Widget>[
                 isEditing ? Row() : FloatingActionButton(
                         backgroundColor: Color(0xFF18D191),
-
                     mini: false,
                     elevation: 9,
                     heroTag: null,
                     onPressed: _choose,
-
-
                     child: Icon(Icons.add_a_photo),
                 ),
                 SizedBox(
@@ -570,11 +549,26 @@ class _AddEditScreenState extends State<AddEditScreen> {
                             _formKey.currentState.save();
                             _product = _product.replaceAll("\n", " ");
                             _note = _note.replaceAll("\n", " ");
-                            widget.onSave(_product, _note,_quantity,_uploadedFileURL,selectedType);
-                            Navigator.pop(context);
+                            //widget.onSave(_product, _note,_quantity,_uploadedFileURL,selectedType);
+                            if (!isEditing) {
+                                BlocProvider.of<ListBloc>(context).add(
+                                    AddItem(Item(_product, note: _note,
+                                        quantity: _quantity,
+                                        type: selectedType,
+                                        imageurl: _uploadedFileURL)),
+                                );
+                                BlocProvider.of<TabBloc>(context).add(
+                                    UpdateTab(AppTab.spesa));
+
+                            } else {
+                                BlocProvider.of<ListBloc>(context).add(UpdateItem(item.copyWith(
+                                    product:_product,note:_note,quantity:_quantity,imageurl:_uploadedFileURL,type:selectedType
+                                )));
+                                Navigator.pop(context);
+                            }
                         }
                     },
-                    //child: Icon(Icons.file_upload),
+
                     child: Icon(isEditing ? Icons.check : Icons.add),
                 ),
             ],

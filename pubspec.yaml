@@ -1,7 +1,7 @@
 name: Spesa
 description: Spesa lista.
 
-version: 1.5.9+9
+version: 1.5.10+10
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -44,6 +44,7 @@ dependencies:
   hydrated_bloc: ^4.1.0
   wc_flutter_share: ^0.2.1
   speech_to_text: ^2.2.0
+  form_floating_action_button: ^1.0.1
 
 
   ###firebase_core: ^0.4.3+3

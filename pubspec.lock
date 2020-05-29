@@ -261,6 +261,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.8.1"
+  form_floating_action_button:
+    dependency: "direct main"
+    description:
+      name: form_floating_action_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   google_sign_in:
     dependency: "direct main"
     description:

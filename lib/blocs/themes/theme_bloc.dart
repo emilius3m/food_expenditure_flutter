@@ -20,7 +20,7 @@ class ThemeBloc extends HydratedBloc<ThemeEvent, ThemeState> {
       return ThemeInitial(appThemeData[AppTheme.Light],"Light");
   }
   */
-  ThemeState get initialState => super.initialState ?? ThemeInitial(appThemeData[AppTheme.Light],"Light");
+  ThemeState get initialState => super.initialState ?? ThemeInitial(appThemeData[AppTheme.Midnight],"Midnight");
 
   @override
   ThemeState fromJson(Map<String, dynamic> json) {

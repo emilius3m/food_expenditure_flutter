@@ -31,7 +31,7 @@ class _TextViewScreenState extends State<TextView> {
       return Scaffold(
           appBar: AppBar(
               title: Text("Seleziona nome prodotto:",style: TextStyle(color:Color(0xFF18D191))),
-              backgroundColor: Colors.white,
+              //backgroundColor: Colors.white,
 
           ),
           body: new SafeArea(
@@ -47,14 +47,16 @@ class _TextViewScreenState extends State<TextView> {
                           child: Container(
                               padding: EdgeInsets.all(14),
                               child: Stack(children: [
-                                  Text(widget.textBlocks[index].text),
+                                  Text(widget.textBlocks[index].text,style: Theme.of(context).textTheme.headline6,),
                                   Align(
                                       alignment: Alignment.topRight,
                                       child: Column(
                                           children: <Widget>[
                                               IconButton(
                                                   icon: Icon(
-                                                      Icons.content_copy),
+                                                      Icons.content_copy,
+                                                      color: Theme.of(context).textTheme.headline6.color
+                                                  ),
                                                   onPressed: () async {
                                                       /*ClipboardManager
                                                           .copyToClipBoard(
@@ -85,29 +87,7 @@ class _TextViewScreenState extends State<TextView> {
                                                             }
                                                       //});
                                                   }),
-                                              /*IconButton(
-                                                  icon: Icon(Icons.backspace),
-                                                  onPressed: () async {
-                                                      String url = Uri
-                                                          .encodeFull(
-                                                          "https://translate.google.co.in/?hl=en&tab=TT#view=home&op=translate&sl=auto&tl=en&text=${widget
-                                                              .textBlocks[index]
-                                                              .text}");
-                                                      if (await canLaunch(
-                                                          url)) {
-                                                          await launch(url);
-                                                      } else {
-                                                          final snackBar = SnackBar(
-                                                              content:
-                                                              Text(
-                                                                  'Failed while launching browser'),
-                                                          );
-                                                          Scaffold.of(context)
-                                                              .showSnackBar(
-                                                              snackBar);
-                                                      }
-                                                  }
-                                                  ),*/
+
 
                                           ],
                                       ),

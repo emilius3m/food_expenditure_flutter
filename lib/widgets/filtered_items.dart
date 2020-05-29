@@ -23,10 +23,7 @@ class FilteredItems extends StatelessWidget {
         if (state is FilteredItemsLoading) {
           return LoadingIndicator();
         }
-        //else if (state is FilteredMode){
-        //    grid = (state as FilteredMode).listgrid;
-        //    return Container();
-        //}
+
 
         else if (state is FilteredItemsLoaded) {
           final spesa = state.filteredItems;
@@ -62,10 +59,10 @@ class FilteredItems extends StatelessWidget {
                                           builder: (context) {
                                               return AddEditScreen(
                                                   onSave: (product, note,quantity,fileName,selectedType) {
-                                                      print ("$product $note $quantity $fileName $selectedType");
-                                                      BlocProvider.of<ListBloc>(context).add(UpdateItem(item.copyWith(
-                                                          product:product,note:note,quantity:quantity,imageurl:fileName,type:selectedType
-                                                      )));
+                                                      //print ("$product $note $quantity $fileName $selectedType");
+                                                      //BlocProvider.of<ListBloc>(context).add(UpdateItem(item.copyWith(
+                                                      //    product:product,note:note,quantity:quantity,imageurl:fileName,type:selectedType
+                                                      //)));
                                                   },
                                                   isEditing: true,
                                                   item: item,
@@ -163,33 +160,32 @@ class FilteredItems extends StatelessWidget {
                           },
                           onLongPress: () async {
                               final removedItem = await Navigator.of(context).push(
-      MaterialPageRoute(
-      builder: (context) {
-      return AddEditScreen(
-      onSave: (product, note,quantity,fileName,selectedType) {
-      print ("$product $note $quantity $fileName $selectedType");
-      BlocProvider.of<ListBloc>(context).add(UpdateItem(item.copyWith(
-      product:product,note:note,quantity:quantity,imageurl:fileName,type:selectedType
-      )));
-      },
-      isEditing: true,
-      item: item,
-      );
-      },
-      ),
-      );
-
-      if (removedItem != null) {
-      Scaffold.of(context).showSnackBar(
-      DeleteItemSnackBar(
-      item: item,
-      onUndo: () =>
-      BlocProvider.of<ListBloc>(context)
-          .add(AddItem(item)),
-      ),
-      );
-      }
-      },
+                                        MaterialPageRoute(
+                                            builder: (context) {
+                                                return AddEditScreen(
+                                                    onSave: (product, note,quantity,fileName,selectedType) {
+                                                        //print ("$product $note $quantity $fileName $selectedType");
+                                                        //BlocProvider.of<ListBloc>(context).add(UpdateItem(item.copyWith(
+                                                        //    product:product,note:note,quantity:quantity,imageurl:fileName,type:selectedType
+                                                        //)));
+                                                        },
+                                                    isEditing: true,
+                                                    item: item,
+                                                );
+                                                },
+                                        ),
+                              );
+                              if (removedItem != null) {
+                                  Scaffold.of(context).showSnackBar(
+                                      DeleteItemSnackBar(
+                                          item: item,
+                                          onUndo: () =>
+                                              BlocProvider.of<ListBloc>(context)
+                                                  .add(AddItem(item)),
+                                      ),
+                                  );
+                              }
+                              },
                           onTap: () async {
                               Navigator.push(
                                   context,
@@ -201,35 +197,11 @@ class FilteredItems extends StatelessWidget {
                                           ),
                                   )
                               );
-                              /*
-                              final removedItem = await Navigator.of(context)
-                                  .push(
-                                  MaterialPageRoute(builder: (_) {
-                                      return DetailsScreen(id: item.id);
-                                  }),
-                              );
-                              if (removedItem != null) {
-                                  Scaffold.of(context).showSnackBar(
-                                      DeleteItemSnackBar(
-                                          item: item,
-                                          onUndo: () =>
-                                              BlocProvider.of<ListBloc>(context)
-                                                  .add(AddItem(item)),
-                                      ),
-                                  );
-                              }*/
                           },
-
-                          /*onCheckboxChanged: (_) {
-                  BlocProvider.of<ListBloc>(context).add(
-                    UpdateItem(item.copyWith(complete: !item.complete)),
-                  );
-                },*/
                       );
                   },
               );
           }
-          return Container();
         } else {
           return Container();
         }

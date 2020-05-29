@@ -118,7 +118,7 @@ class Themes {
                 headline2: TextStyle(color: Colors.teal, fontSize: 14, fontWeight: FontWeight.bold),
                 headline3: _textStyle,
                 headline4: _textStyle,
-                headline5: _textStyle,
+                headline5: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
                 headline6: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
                 button: _textStyle,
                 caption: _textStyle,

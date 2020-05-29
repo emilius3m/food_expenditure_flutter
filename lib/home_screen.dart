@@ -22,6 +22,7 @@ import 'dart:math';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:form_floating_action_button/form_floating_action_button.dart';
 
 
 List<Language> languages = [
@@ -47,6 +48,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+    bool _loading = false;
   ByteData imgBytes;
 
   double level = 0.0;
@@ -215,7 +217,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return BlocBuilder<TabBloc, AppTab>(
           builder: (context, activeTab) {
               return Scaffold(
-
                   ///////drawer: SpesaDrawer(),
                   appBar: AppBar(
                       //backgroundColor: Colors.white,
@@ -306,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) => SettingsPage(
-                                              "prova",
+                                              "",
                                           )),
                                   );
                               },
@@ -346,16 +347,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   activeTab == AppTab.spesa ? FilteredItems() : AddEditScreen(
                       onSave: (product, note,quantity,fileName,selectedType) {
                           ///print ("$product $note $fileName $selectedType");
-                          BlocProvider.of<ListBloc>(context).add(
-                              AddItem(Item( product, note: note,quantity:quantity,type:selectedType,imageurl:fileName )),
-                          );
-                          BlocProvider.of<TabBloc>(context).add(UpdateTab(AppTab.spesa));
-                          Navigator.pushNamed(context, '/');
+                          //BlocProvider.of<ListBloc>(context).add(
+                          //    AddItem(Item( product, note: note,quantity:quantity,type:selectedType,imageurl:fileName )),
+                          //);
+                          //BlocProvider.of<TabBloc>(context).add(UpdateTab(AppTab.spesa));
+                          //Navigator.pushReplacementNamed(context, '/');
+                          //Navigator.of(context)
+                          //    .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+                          //Navigator.pushNamed(context, '/');
                       },
                       isEditing: false,
                   ),
                   //]),
-                  floatingActionButton: ((activeTab == AppTab.addelement) && _speechRecognitionAvailable) ? Container() :
+                  /*floatingActionButton: ((activeTab == AppTab.addelement) && _speechRecognitionAvailable) ? Container() :
               FloatingActionButton(
                       backgroundColor: Color(0xFF18D191),
                       mini: false,
@@ -363,6 +367,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed:  _speech.isListening ? null : startListening,
                       child: Icon(Icons.keyboard_voice),
                       tooltip: 'Add product',
+                  ),*/
+                  floatingActionButton:((activeTab == AppTab.addelement) && _speechRecognitionAvailable) ? Container() : FormFloatingActionButton(
+                      loading: _loading,
+                      icon: Icons.keyboard_voice,
+                      color:  Color(0xFF18D191),
+                      onSubmit: () {
+                          setState(() => _loading = true);
+                          startListening();
+                          Future.delayed(Duration(seconds: 5)).then((_) {
+                              if (mounted) {
+                                  setState(() {
+                                      _loading = false;
+                                  });
+                              }
+                          });
+                      },
+
                   ),
 
                   bottomNavigationBar: TabSelector(
@@ -376,7 +397,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void startListening() {
-
       lastWords = "";
       lastError = "";
       _speech.listen(
@@ -395,9 +415,14 @@ class _HomeScreenState extends State<HomeScreen> {
       BlocProvider.of<ListBloc>(context).add(
           AddItem(Item( result.recognizedWords, note: "",quantity:"0",type:"" )));
 
+      if (mounted) {
+          setState(() {
+              _loading = false;
+          });
+      }
       setState(() {
           lastWords = "${result.recognizedWords} - ${result.finalResult}";
-          //print (lastWords);
+
       });
   }
 

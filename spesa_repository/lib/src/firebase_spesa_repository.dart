@@ -17,19 +17,7 @@ class FirebaseSpesaRepository implements SpesaRepository {
 
   @override
   Future<void> addNewItem(Item item) async {
-      /*spesaCollection.add({
-          "name": "john",
-          "age": 50,
-          "email": "example@example.com",
-          "address": {"street": "street 24", "city": "new york"}
-      }).then((value) {
-          print(value.documentID);
-          spesaCollection
-              .document(value.documentID)
-              .collection("pets")
-              .add({"petName": "blacky", "petType": "dog", "petAge": 1});
-      });
-        */
+
       Firestore.instance.runTransaction((Transaction transaction) async {
           spesaCollection.document(_uid).collection('mylist').add(
               item.toEntity().toDocument());
